@@ -60,7 +60,7 @@ public class MinotaurMovement : MonoBehaviour
             distanceToMove.x = -1;
         }
 
-        Debug.Log(distanceToMove);
+        // Debug.Log(distanceToMove);
 
         // try vertical movement if can't horizontal movement
         if (distanceToMove.x == 0)

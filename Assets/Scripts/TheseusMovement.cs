@@ -50,8 +50,15 @@ public class TheseusMovement : MonoBehaviour
     {
         if (isMoving == false)
         {
+            Vector2 moveDirection = move.ReadValue<Vector2>();
+            // check if its possible to move to the next tile before move
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDirection, 1f);
+            if (hit.collider != null)
+            {
+                Debug.Log("hit");
+            }
             isMoving = true;
-            Vector3 targetPos = gameObject.transform.position + (Vector3)move.ReadValue<Vector2>();
+            Vector3 targetPos = gameObject.transform.position + (Vector3)moveDirection;
 
             while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
             {
