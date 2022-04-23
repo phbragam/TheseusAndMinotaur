@@ -9,8 +9,14 @@ public class TheseusMovement : MonoBehaviour
     private PlayerInputActions playerInputActions;
     private InputAction move;
     private bool isMoving;
+
+
     [SerializeField] private float timeToMoveBetweenTiles;
 
+    //public GameObject minotaur;
+
+    public delegate void FinishedTheseusMovement();
+    public static FinishedTheseusMovement finishedMovement;
 
     private void Awake()
     {
@@ -19,19 +25,28 @@ public class TheseusMovement : MonoBehaviour
 
     private void OnEnable()
     {
+        MinotaurMovement.finishedMovement += UnblockTheseusMovement;
         move = playerInputActions.Player.Move;
         move.Enable();
 
         move.performed += StartMovement;
     }
 
-    private void StartMovement(InputAction.CallbackContext obj)
+
+    private void OnDisable()
     {
-        StartCoroutine("MovePlayer");
+        MinotaurMovement.finishedMovement -= UnblockTheseusMovement;
+        move.Disable();
     }
 
 
-    IEnumerator MovePlayer()
+    private void StartMovement(InputAction.CallbackContext obj)
+    {
+        StartCoroutine("MoveTheseus");
+    }
+
+
+    IEnumerator MoveTheseus()
     {
         if (isMoving == false)
         {
@@ -49,14 +64,14 @@ public class TheseusMovement : MonoBehaviour
             }
 
             gameObject.transform.position = targetPos;
-            isMoving = false;
+            finishedMovement?.Invoke();
         }
     }
 
-
-    private void OnDisable()
+    private void UnblockTheseusMovement()
     {
-        move.Disable();
+        // Debug.Log("You can run Theseus!");
+        isMoving = false;
     }
 
 }
