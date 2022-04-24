@@ -13,8 +13,6 @@ public class TheseusMovement : MonoBehaviour
 
     [SerializeField] private float timeToMoveBetweenTiles;
 
-    //public GameObject minotaur;
-
     public delegate void FinishedTheseusMovement();
     public static FinishedTheseusMovement finishedMovement;
 
@@ -53,31 +51,27 @@ public class TheseusMovement : MonoBehaviour
             Vector2 moveDirection = move.ReadValue<Vector2>();
             // check if its possible to move to the next tile before move
             RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDirection, 1f);
-            if (hit.collider != null)
+            if (hit.collider == null)
             {
-                Debug.Log("hit");
+                isMoving = true;
+                Vector3 targetPos = gameObject.transform.position + (Vector3)moveDirection;
+
+                while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
+                {
+                    // not doing this movement inside update or fixed update,
+                    // because of this I'm not using Time.deltaTime or Time.fixedDeltaTime
+                    transform.position = Vector3.MoveTowards(transform.position, targetPos, 1 / (timeToMoveBetweenTiles * 60));
+                    yield return new WaitForSeconds(1 / (timeToMoveBetweenTiles * 60));
+                }
+
+                gameObject.transform.position = targetPos;
+                finishedMovement?.Invoke();
             }
-            isMoving = true;
-            Vector3 targetPos = gameObject.transform.position + (Vector3)moveDirection;
-
-            while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
-            {
-                //Debug.Log((targetPos - transform.position).sqrMagnitude);
-
-                // not doing this movement inside update or fixed update,
-                // because of this I'm not using Time.deltaTime or Time.fixedDeltaTime
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, 1 / (timeToMoveBetweenTiles * 60));
-                yield return new WaitForSeconds(1 / (timeToMoveBetweenTiles * 60));
-            }
-
-            gameObject.transform.position = targetPos;
-            finishedMovement?.Invoke();
         }
     }
 
     private void UnblockTheseusMovement()
     {
-        // Debug.Log("You can run Theseus!");
         isMoving = false;
     }
 

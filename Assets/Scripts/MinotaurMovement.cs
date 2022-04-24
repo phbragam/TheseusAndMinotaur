@@ -12,20 +12,6 @@ public class MinotaurMovement : MonoBehaviour
     public delegate void FinishedMinotaurMovement();
     public static FinishedMinotaurMovement finishedMovement;
 
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnEnable()
     {
         TheseusMovement.finishedMovement += StartMovement;
@@ -38,11 +24,7 @@ public class MinotaurMovement : MonoBehaviour
 
     void StartMovement()
     {
-        // Debug.Log("Minotaur started walking");
-
         StartCoroutine("MoveMinotaur");
-
-
     }
 
     IEnumerator MoveMinotaur()
@@ -60,7 +42,16 @@ public class MinotaurMovement : MonoBehaviour
             distanceToMove.x = -1;
         }
 
-        // Debug.Log(distanceToMove);
+        // check if there is a wall blocking the horizontal movement
+        if (distanceToMove.x != 0)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceToMove, 1f);
+            if (hit.collider != null)
+            {
+                Debug.Log("Minotaur trapped x");
+                distanceToMove.x = 0;
+            }
+        }
 
         // try vertical movement if can't horizontal movement
         if (distanceToMove.x == 0)
@@ -76,12 +67,21 @@ public class MinotaurMovement : MonoBehaviour
             }
         }
 
+        // check if there is a wall blocking the vertical movement
+        if (distanceToMove.y != 0)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceToMove, 1f);
+            if (hit.collider != null)
+            {
+                Debug.Log("Minotaur trapped y");
+                distanceToMove.y = 0;
+            }
+        }
+
         Vector3 targetPos = gameObject.transform.position + (Vector3)distanceToMove;
 
         while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
-            //Debug.Log((targetPos - transform.position).sqrMagnitude);
-
             // not doing this movement inside update or fixed update,
             // because of this I'm not using Time.deltaTime or Time.fixedDeltaTime
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 1 / (timeToMoveBetweenTiles * 60));
@@ -102,3 +102,4 @@ public class MinotaurMovement : MonoBehaviour
         }
     }
 }
+
