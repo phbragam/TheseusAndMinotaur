@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TheseusMovement : MonoBehaviour
 {
     private PlayerInputActions playerInputActions;
     private InputAction move;
+    private InputAction reload;
+    private InputAction wait;
     private bool isMoving;
     [SerializeField] private LayerMask mazeLayer;
 
@@ -14,6 +18,9 @@ public class TheseusMovement : MonoBehaviour
 
     public delegate void FinishedTheseusMovement();
     public static FinishedTheseusMovement finishedMovement;
+
+    public delegate void TheseusWaited();
+    public static TheseusWaited theseusWaited;
 
     private void Awake()
     {
@@ -30,7 +37,16 @@ public class TheseusMovement : MonoBehaviour
         move.Enable();
 
         move.performed += StartMovement;
+
+        reload = playerInputActions.Player.Reload;
+        reload.performed += ReloadActiveScene;
+        reload.Enable();
+
+        wait = playerInputActions.Player.Wait;
+        wait.performed += DoWait;
+        wait.Enable();
     }
+
 
 
     private void OnDisable()
@@ -41,6 +57,8 @@ public class TheseusMovement : MonoBehaviour
 
 
         move.Disable();
+        reload.Disable();
+        wait.Disable();
     }
 
 
@@ -84,5 +102,16 @@ public class TheseusMovement : MonoBehaviour
     private void DisableMovement()
     {
         move.Disable();
+    }
+
+    void ReloadActiveScene(InputAction.CallbackContext obj)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void DoWait(InputAction.CallbackContext obj)
+    {
+        isMoving = true;
+        theseusWaited?.Invoke();
     }
 }

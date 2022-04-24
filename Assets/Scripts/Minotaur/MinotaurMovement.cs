@@ -21,11 +21,13 @@ public class MinotaurMovement : MonoBehaviour
     private void OnEnable()
     {
         TheseusMovement.finishedMovement += StartMovement;
+        TheseusMovement.theseusWaited += StartMovement;
     }
 
     private void OnDisable()
     {
         TheseusMovement.finishedMovement -= StartMovement;
+        TheseusMovement.theseusWaited -= StartMovement;
     }
 
     void StartMovement()
