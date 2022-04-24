@@ -9,6 +9,7 @@ public class TheseusMovement : MonoBehaviour
     private PlayerInputActions playerInputActions;
     private InputAction move;
     private bool isMoving;
+    [SerializeField] private LayerMask mazeLayer;
 
 
     [SerializeField] private float timeToMoveBetweenTiles;
@@ -24,6 +25,8 @@ public class TheseusMovement : MonoBehaviour
     private void OnEnable()
     {
         MinotaurMovement.finishedMovement += UnblockTheseusMovement;
+        EndLevelScript.playerReachedExit += DisableMovement;
+
         move = playerInputActions.Player.Move;
         move.Enable();
 
@@ -34,6 +37,8 @@ public class TheseusMovement : MonoBehaviour
     private void OnDisable()
     {
         MinotaurMovement.finishedMovement -= UnblockTheseusMovement;
+        EndLevelScript.playerReachedExit -= DisableMovement;
+
         move.Disable();
     }
 
@@ -50,7 +55,7 @@ public class TheseusMovement : MonoBehaviour
         {
             Vector2 moveDirection = move.ReadValue<Vector2>();
             // check if its possible to move to the next tile before move
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDirection, 1f);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDirection, 1f, mazeLayer);
             if (hit.collider == null)
             {
                 isMoving = true;
@@ -75,4 +80,8 @@ public class TheseusMovement : MonoBehaviour
         isMoving = false;
     }
 
+    private void DisableMovement()
+    {
+        move.Disable();
+    }
 }

@@ -12,6 +12,13 @@ public class MinotaurMovement : MonoBehaviour
     public delegate void FinishedMinotaurMovement();
     public static FinishedMinotaurMovement finishedMovement;
 
+    public delegate void MinotaurAteTheseus();
+    public static MinotaurAteTheseus minotaurAteTheseus;
+
+    private void Awake()
+    {
+        theseus = GameObject.FindObjectOfType<TheseusMovement>().gameObject;
+    }
     private void OnEnable()
     {
         TheseusMovement.finishedMovement += StartMovement;
@@ -89,6 +96,11 @@ public class MinotaurMovement : MonoBehaviour
         }
 
         gameObject.transform.position = targetPos;
+
+        if ((gameObject.transform.position - theseus.transform.position).sqrMagnitude < Mathf.Epsilon)
+        {
+            minotaurAteTheseus?.Invoke();
+        }
 
         if (movementCounter == 0)
         {
