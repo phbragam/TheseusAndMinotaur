@@ -24,6 +24,7 @@ public class TheseusMovement : MonoBehaviour
     {
         MinotaurMovement.finishedMovement += UnblockTheseusMovement;
         EndLevelScript.playerReachedExit += DisableMovement;
+        MinotaurMovement.minotaurAteTheseus += DisableMovement;
 
         move = playerInputActions.Player.Move;
         move.Enable();
@@ -36,6 +37,8 @@ public class TheseusMovement : MonoBehaviour
     {
         MinotaurMovement.finishedMovement -= UnblockTheseusMovement;
         EndLevelScript.playerReachedExit -= DisableMovement;
+        MinotaurMovement.minotaurAteTheseus -= DisableMovement;
+
 
         move.Disable();
     }
