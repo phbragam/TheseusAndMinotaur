@@ -25,7 +25,15 @@ public class GameManager : MonoBehaviour
 
     void LoadNextScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (SceneManager.GetActiveScene().name != "LevelCredits")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else
+        {
+            Debug.Log("quit");
+            Application.Quit();
+        }
     }
 
     void ReloadLevel()

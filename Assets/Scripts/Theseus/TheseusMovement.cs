@@ -10,11 +10,11 @@ public class TheseusMovement : MonoBehaviour
     private InputAction move;
     private InputAction reload;
     private InputAction wait;
+    private InputAction quit;
     private bool isMoving;
     [SerializeField] private LayerMask mazeLayer;
 
-
-    [SerializeField] private float timeToMoveBetweenTiles;
+    [SerializeField] private float speed;
 
     public delegate void FinishedTheseusMovement();
     public static FinishedTheseusMovement finishedMovement;
@@ -45,8 +45,11 @@ public class TheseusMovement : MonoBehaviour
         wait = playerInputActions.Player.Wait;
         wait.performed += DoWait;
         wait.Enable();
-    }
 
+        quit = playerInputActions.Player.Quit;
+        quit.performed += DoQuit;
+        quit.Enable();
+    }
 
 
     private void OnDisable()
@@ -59,6 +62,7 @@ public class TheseusMovement : MonoBehaviour
         move.Disable();
         reload.Disable();
         wait.Disable();
+        quit.Disable();
     }
 
 
@@ -84,8 +88,8 @@ public class TheseusMovement : MonoBehaviour
                 {
                     // not doing this movement inside update or fixed update,
                     // because of this I'm not using Time.deltaTime or Time.fixedDeltaTime
-                    transform.position = Vector3.MoveTowards(transform.position, targetPos, 1 / (timeToMoveBetweenTiles * 60));
-                    yield return new WaitForSeconds(1 / (timeToMoveBetweenTiles * 60));
+                    transform.position = Vector3.MoveTowards(transform.position, targetPos, speed / 60f);
+                    yield return new WaitForSeconds(1 / 60f);
                 }
 
                 gameObject.transform.position = targetPos;
@@ -114,4 +118,11 @@ public class TheseusMovement : MonoBehaviour
         isMoving = true;
         theseusWaited?.Invoke();
     }
+
+    private void DoQuit(InputAction.CallbackContext obj)
+    {
+        Debug.Log("quit");
+        Application.Quit();
+    }
+
 }

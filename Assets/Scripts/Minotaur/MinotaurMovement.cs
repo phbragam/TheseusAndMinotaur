@@ -4,7 +4,7 @@ using UnityEngine;
 public class MinotaurMovement : MonoBehaviour
 {
     [SerializeField] private GameObject theseus;
-    [SerializeField] private float timeToMoveBetweenTiles;
+    [SerializeField] private float speed;
 
     private int movementCounter;
 
@@ -92,8 +92,8 @@ public class MinotaurMovement : MonoBehaviour
         {
             // not doing this movement inside update or fixed update,
             // because of this I'm not using Time.deltaTime or Time.fixedDeltaTime
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, 1 / (timeToMoveBetweenTiles * 60));
-            yield return new WaitForSeconds(1 / (timeToMoveBetweenTiles * 60));
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed / 60f);
+            yield return new WaitForSeconds(1 / 60f);
         }
 
         gameObject.transform.position = targetPos;

@@ -7,9 +7,8 @@ public class EndLevelScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer != 3)
+        if (other.gameObject.GetComponent<TheseusMovement>())
         {
-            Debug.Log("end");
             playerReachedExit?.Invoke();
         }
     }

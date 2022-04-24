@@ -102,7 +102,7 @@ MonoBehaviour:
   mazeLayer:
     serializedVersion: 2
     m_Bits: 8
-  timeToMoveBetweenTiles: 0.5
+  speed: 3
 --- !u!50 &1831099193
 Rigidbody2D:
   serializedVersion: 4
