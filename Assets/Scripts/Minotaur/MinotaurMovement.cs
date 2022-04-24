@@ -56,7 +56,6 @@ public class MinotaurMovement : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceToMove, 1f);
             if (hit.collider != null)
             {
-                // Debug.Log("Minotaur trapped x");
                 distanceToMove.x = 0;
             }
         }
@@ -81,7 +80,6 @@ public class MinotaurMovement : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(transform.position, distanceToMove, 1f);
             if (hit.collider != null)
             {
-                // Debug.Log("Minotaur trapped y");
                 distanceToMove.y = 0;
             }
         }

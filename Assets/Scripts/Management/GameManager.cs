@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("quit");
             Application.Quit();
         }
     }
