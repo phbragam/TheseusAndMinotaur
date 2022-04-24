@@ -46,9 +46,9 @@ public class TheseusMovement : MonoBehaviour
         wait.performed += DoWait;
         wait.Enable();
 
-        quit = playerInputActions.Player.Quit;
-        quit.performed += DoQuit;
-        quit.Enable();
+        // quit = playerInputActions.Player.Quit;
+        // quit.performed += DoQuit;
+        // quit.Enable();
     }
 
 
@@ -62,7 +62,7 @@ public class TheseusMovement : MonoBehaviour
         move.Disable();
         reload.Disable();
         wait.Disable();
-        quit.Disable();
+        //quit.Disable();
     }
 
 

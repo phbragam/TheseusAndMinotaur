@@ -1082,8 +1082,6 @@ MonoBehaviour:
     r: restart level
 
 
-    esc: quit
-    game
 
 '
   m_isRightToLeft: 0

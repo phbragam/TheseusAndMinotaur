@@ -519,9 +519,6 @@ PrefabInstance:
         r: restart level
 
 
-        esc:
-        quit game
-
 '
       objectReference: {fileID: 0}
     - target: {fileID: 812343266, guid: 2b1c647c742dca347b70c42533dd8a90, type: 3}
