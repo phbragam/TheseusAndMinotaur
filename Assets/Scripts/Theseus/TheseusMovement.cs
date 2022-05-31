@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class TheseusMovement : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class TheseusMovement : MonoBehaviour
     public delegate void TheseusWaited();
     public static TheseusWaited theseusWaited;
 
+    public Vector2 nextMovement;
+
     private void Awake()
     {
         playerInputActions = new PlayerInputActions();
@@ -36,6 +39,7 @@ public class TheseusMovement : MonoBehaviour
         move = playerInputActions.Player.Move;
         move.Enable();
 
+        move.performed += AddMovement;
         move.performed += StartMovement;
 
         reload = playerInputActions.Player.Reload;
@@ -57,6 +61,7 @@ public class TheseusMovement : MonoBehaviour
         MinotaurMovement.finishedMovement -= UnblockTheseusMovement;
         EndLevelScript.playerReachedExit -= DisableMovement;
         MinotaurMovement.minotaurAteTheseus -= DisableMovement;
+        move.performed -= AddMovement;
 
 
         move.Disable();
@@ -68,21 +73,38 @@ public class TheseusMovement : MonoBehaviour
 
     private void StartMovement(InputAction.CallbackContext obj)
     {
-        StartCoroutine("MoveTheseus");
+
+        StartCoroutine(MoveTheseus(move.ReadValue<Vector2>()));
     }
 
+    private void AddMovement(InputAction.CallbackContext obj)
+    {
+        nextMovement = obj.ReadValue<Vector2>();
+        Debug.Log(nextMovement);
+    }
 
-    IEnumerator MoveTheseus()
+    // private void StartSecondMovement(InputAction.CallbackContext obj)
+    // {
+
+    // }
+
+
+    IEnumerator MoveTheseus(Vector2 movement)
     {
         if (isMoving == false)
         {
-            Vector2 moveDirection = move.ReadValue<Vector2>();
+            nextMovement = Vector2.zero;
+            // if (movement == Vector2.zero)
+            // {
+            //     movement = move.ReadValue<Vector2>();
+            // }
+
             // check if its possible to move to the next tile before move
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDirection, 1f, mazeLayer);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, movement, 1f, mazeLayer);
             if (hit.collider == null)
             {
                 isMoving = true;
-                Vector3 targetPos = gameObject.transform.position + (Vector3)moveDirection;
+                Vector3 targetPos = gameObject.transform.position + (Vector3)movement;
 
                 while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
                 {
@@ -98,9 +120,16 @@ public class TheseusMovement : MonoBehaviour
         }
     }
 
+
     private void UnblockTheseusMovement()
     {
         isMoving = false;
+        if (nextMovement != Vector2.zero)
+        {
+            StartCoroutine(MoveTheseus(nextMovement));
+        }
+
+        nextMovement = Vector2.zero;
     }
 
     private void DisableMovement()
